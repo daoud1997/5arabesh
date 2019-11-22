@@ -1,5 +1,5 @@
 package ReactorSimulator;
-/*
+/* 
  * 
  */
 import java.io.BufferedReader;
@@ -13,7 +13,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 
-public static class CSVReaderWriter {
+public  class CSVReaderWriter {
   
   public static void main (String [] args) throws FileNotFoundException, IOException {
     System.out.println("Reading from CSV file..."); 

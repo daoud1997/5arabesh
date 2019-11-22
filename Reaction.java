@@ -20,17 +20,25 @@ public class Reaction {
   //Constructor
   
   public Reaction (Species [] reactants, Species [] products, double [] coefficients,  boolean elementary, boolean reversible){
-    
+    if(reactants == null || products == null || coefficients == null)
+    	throw new CouldNotConstructObjectException("Could not initiate Reaction");
     this.reactants = new Species [reactants.length];
     for (int i=0; i<reactants.length; i++){
-      this.reactants[i] = reactants[i];
+    	if(reactants[i]==null)
+    		throw new CouldNotConstructObjectException("Could not initiate Reaction");
+      this.reactants[i] = new Species(reactants[i]);
     }
     this.products = new Species [products.length];
     for (int i=0; i<products.length; i++){
-      this.products[i] = products[i];
+    	if(products[i] == null)
+    		throw new CouldNotConstructObjectException("Could not initiate Reaction");
+      this.products[i] = new Species(products[i]);
     }
+    //Assuming coefficient of a species in a reaction can not be zero or negative
     this.coefficients = new double [coefficients.length];
     for (int i=0; i<coefficients.length; i++){
+    	if(coefficients[i]<=0)
+    		throw new CouldNotConstructObjectException("Could not initiate Reaction");
       this.coefficients[i] = coefficients[i];
     }     
     this.elementary = elementary;
@@ -39,26 +47,36 @@ public class Reaction {
   
   public Reaction (Species [] reactants, Species [] products, double [] coefficients,  boolean elementary, boolean reversible, double equilibriumConstant){
     
-    this.reactants = new Species [reactants.length];
-    for (int i=0; i<reactants.length; i++){
-      this.reactants[i] = reactants[i];
-    }
-    this.products = new Species [products.length];
-    for (int i=0; i<products.length; i++){
-      this.products[i] = products[i];
-    }
-    this.coefficients = new double [coefficients.length];
-    for (int i=0; i<coefficients.length; i++){
-      this.coefficients[i] = coefficients[i];
-    }     
-    this.elementary = elementary;
-    this.reversible = reversible;
-    this.equilibriumConstant= equilibriumConstant;
+	  if(reactants == null || products == null || coefficients == null)
+	    	throw new CouldNotConstructObjectException("Could not initiate Reaction");
+	    this.reactants = new Species [reactants.length];
+	    for (int i=0; i<reactants.length; i++){
+	    	if(reactants[i]==null)
+	    		throw new CouldNotConstructObjectException("Could not initiate Reaction");
+	      this.reactants[i] = new Species(reactants[i]);
+	    }
+	    this.products = new Species [products.length];
+	    for (int i=0; i<products.length; i++){
+	    	if(products[i] == null)
+	    		throw new CouldNotConstructObjectException("Could not initiate Reaction");
+	      this.products[i] = new Species(products[i]);
+	    }
+	    //Assuming coefficient of a species in a reaction can not be zero or negative
+	    this.coefficients = new double [coefficients.length];
+	    for (int i=0; i<coefficients.length; i++){
+	    	if(coefficients[i]<=0)
+	    		throw new CouldNotConstructObjectException("Could not initiate Reaction");
+	      this.coefficients[i] = coefficients[i];
+	    }     
+	    this.elementary = elementary;
+	    this.reversible = reversible;
+	    this.equilibriumConstant= equilibriumConstant;
   }
   
-  //Copy Constructor
+  //Copy Constructor Just check source is null is sufficient no need for other conditions
   public Reaction (Reaction source) {
-    
+	  if(source == null)
+		  throw new CouldNotConstructObjectException("Could not initiate Copy of Reaction");
     this.reactants = new Species [source.reactants.length];
     for (int i=0; i<source.reactants.length; i++){
       this.reactants[i] = source.reactants[i];
@@ -73,15 +91,29 @@ public class Reaction {
   }
   
   //Accessors
-  
+  //TODO Check if you need to check constraints in accessors
   public Species [] getReactants (){
-    return this.reactants;
+	  Species [] copy = new Species[this.reactants.length];
+	  for(int i =0; i<copy.length;i++) {
+		  copy[i] = new Species(this.reactants[i]);
+	  }
+	  
+	  return copy;
   }
   public Species [] getProducts (){
-    return this.products;
+	  Species [] copy = new Species[this.products.length];
+	  for(int i =0; i<copy.length;i++) {
+		  copy[i] = new Species(this.products[i]);
+	  }
+	  
+    return copy;
   }
   public double [] getCoeffients (){
-    return this.coefficients;
+	  double [] copy = new double[this.coefficients.length];
+	  for(int i =0; i<copy.length;i++) {
+		  copy[i] = this.coefficients[i];
+	  }
+    return copy;
   }
   public boolean getElementary(){
     return this.elementary;
@@ -96,20 +128,32 @@ public class Reaction {
   //Mutators
   
   public void setReactants (Species [] reactants){
+	  if(reactants == null || reactants.length != this.reactants.length)
+		  throw new CouldNotConstructObjectException("Could not set reactants");
     this.reactants = new Species [reactants.length];
     for (int i=0; i<reactants.length; i++){
-      this.reactants[i] = reactants[i];
+    	if(reactants[i] == null)
+    		throw new CouldNotConstructObjectException("Could not set reactants");
+      this.reactants[i] = new Species(reactants[i]);
     }
   }
   public void setProducts (Species [] products){
+	  if(products == null || products.length != this.products.length)
+		  throw new CouldNotConstructObjectException("Could not set products");
     this.products = new Species [products.length];
     for (int i=0; i<products.length; i++){
-      this.products[i] = products[i];
+    	if(products[i]==null)
+    		throw new CouldNotConstructObjectException("Could not set products");
+      this.products[i] = new Species(products[i]);
     }
   }
   public void setCoefficients (double [] coefficients){
+	  if(coefficients == null || coefficients.length != this.coefficients.length)
+		  throw new CouldNotConstructObjectException("Could not set coefficients");
     this.coefficients = new double [coefficients.length];
     for (int i=0; i<coefficients.length;i++){
+    	if(coefficients[i]<=0)
+    		throw new CouldNotConstructObjectException("Could not set coefficients");
       this.coefficients[i] = coefficients[i];
     }
   }
@@ -283,6 +327,46 @@ public class Reaction {
    } 
    }
    */
+  
+  //Clone Method
+  public Reaction clone() {
+	  return new Reaction(this);
+  }
+  
+  //Equals Method, Need to check all of its instances
+  public boolean equals(Object source){
+	    if (source == null)
+	      return false;
+	    else if (source.getClass() != this.getClass())
+	      return false;
+	    else {
+	      Reaction object = (Reaction)source;
+	      if((object.reactants.length != this.reactants.length)&&(object.products.length != this.products.length)
+	    		  &&(object.coefficients.length != this.coefficients.length))
+	    	  return false;
+	      boolean other = true;
+	      for(int i =0; i<object.reactants.length;i++) {
+	    	  if(!(this.reactants[i].equals(object.reactants[i])))
+	    		  other = false;
+	      }
+	      for(int i =0; i<object.products.length;i++) {
+	    	  if(!(this.products[i].equals(object.products[i])))
+	    		  other = false;
+	      }
+	      for(int i =0; i<object.coefficients.length;i++) {
+	    	  if(!(this.coefficients[i] == (object.coefficients[i])))
+	    		  other = false;
+	      }
+	      if(object.elementary != this.elementary)
+	    	  other = false;
+	      if(object.reversible != this.reversible)
+	    	  other = false;
+	      if(object.equilibriumConstant != this.equilibriumConstant)
+	    	  other = false;
+	      
+	     return other;
+	    }
+  }
   
   public String toString (){
     String string ="";

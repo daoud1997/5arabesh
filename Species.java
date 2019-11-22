@@ -12,14 +12,18 @@ public class Species {
   private double maxRateChangeFlow;
   private double transportCoefficient; 
   private double shellSideConcentration;
-  
+  //Assuming maxRatechangeflow, transport, shell cant be less than zero CHange it if needed
   //Constructor
   public Species (char name, double initialFlowRate,double maxRateChangeFlow) {
+	  if(name == ' '|| initialFlowRate<0|| maxRateChangeFlow<0)
+		  throw new CouldNotConstructObjectException("Could not construct Species");
     this.name = name; 
     this.initialFlowRate = initialFlowRate;
     this.maxRateChangeFlow = maxRateChangeFlow;
   }
   public Species (char name, double initialFlowRate, double rateConstant, double maxRateChangeFlow) {
+	  if(name == ' '|| initialFlowRate<0|| maxRateChangeFlow<0 || rateConstant<0)
+		  throw new CouldNotConstructObjectException("Could not construct Species");
     this.name = name; 
     this.initialFlowRate = initialFlowRate;
     this.rateConstant= rateConstant;
@@ -28,6 +32,8 @@ public class Species {
   
   public Species (char name, double initialFlowRate, double initialConcentration, double rateConstant, double maxRateChangeFlow,
                   double transportCoefficient, double shellSideConcentration) {
+	  if(name == ' '|| initialFlowRate<0|| maxRateChangeFlow<0|| transportCoefficient<0|| shellSideConcentration<0)
+		  throw new CouldNotConstructObjectException("Could not construct Species");
     this.name = name; 
     this.initialFlowRate = initialFlowRate;
     this.initialConcentration = initialConcentration; 
@@ -39,6 +45,8 @@ public class Species {
   
   //Copy Constructor
   public Species (Species source){
+	  if(source == null)
+		  throw new CouldNotConstructObjectException("Could not construct copy Species");
     this.name = source.name;
     this.initialFlowRate = source.initialFlowRate;
     this.initialConcentration = source.initialConcentration;
@@ -71,26 +79,47 @@ public class Species {
     return this.shellSideConcentration;
   }
   //Mutators
-  public void setName (char name){
+  public boolean setName (char name){
+	  if(name == ' ')
+		  return false;
     this.name = name;
+    return true;
   }
-  public void setInitialFlowRate (double initialFlowRate){
+  public boolean setInitialFlowRate (double initialFlowRate){
+	  if(initialFlowRate <0 )
+		  return false;
     this.initialFlowRate = initialFlowRate;
+    return true;
   } 
-  public void setInitialConcentration (double initialConcentration){
+  public boolean setInitialConcentration (double initialConcentration){
+	  if(initialConcentration<0)
+		  return false;
     this.initialConcentration= initialConcentration;
+    return true;
   }
-  public void setRateConstant (double rateConstant){
+  public boolean setRateConstant (double rateConstant){
+	  if(rateConstant < 0)
+		  return false;
     this.rateConstant = rateConstant;
+    return true;
   }
-  public void setMaxRateChangeFLow(double maxRateChangeFlow){
+  public boolean setMaxRateChangeFLow(double maxRateChangeFlow){
+	  if(maxRateChangeFlow<0)
+		  return false;
     this.maxRateChangeFlow = maxRateChangeFlow;
+    return true;
   }
-  public void setTransportCoefficient (double transportCoefficient){
+  public boolean setTransportCoefficient (double transportCoefficient){
+	  if(transportCoefficient<0)
+		  return false;
     this.transportCoefficient=transportCoefficient;
+    return true;
   }
-  public void setShellSideConcentration(double shellSideConcentration){
+  public boolean setShellSideConcentration(double shellSideConcentration){
+	  if(shellSideConcentration<0)
+		  return false;
     this.shellSideConcentration= shellSideConcentration;
+    return true;
   }
   // Methods
   
@@ -99,13 +128,8 @@ public class Species {
       return this.initialFlowRate;
     else return initialConcentration;     
   }
-  /*   
-   public boolean equals (Species specie){
-   if (specie!=null && specie instanceof Species && specie.getName() == this.name)
-   return true;
-   else return false;
-   }
-   */
+ 
+  //Equals Method
   public boolean equals(Object source){
     if (source == null)
       return false;
@@ -113,8 +137,13 @@ public class Species {
       return false;
     else {
       Species object = (Species)source;
-      return (this.name == object.name);
+      return ((object.name == this.name) && (object.initialConcentration == this.initialConcentration) && (object.rateConstant == this.rateConstant)&&
+    		  (object.maxRateChangeFlow == this.maxRateChangeFlow) && (object.transportCoefficient == this.transportCoefficient) && (object.shellSideConcentration == this.shellSideConcentration) );
     }
+  }
+  //Clone Method
+  public Species clone() {
+	  return new Species(this);
   }
   
   public String toString (){

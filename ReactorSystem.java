@@ -8,8 +8,8 @@ import java.util.*;
 public class ReactorSystem {
   
   //Instance variables
-  private int configuration; 
-  private int numberReactors;
+  private int configuration; //TODO: NOT SURE WhAT u mean by configuration but ill assume it cant be zero or less Change it if its not the case
+  private int numberReactors; //Assuming the number of TubularReactor = numberReactors and cant be zero or less
   private TubularReactor [] reactors; 
   
   //Constructor
@@ -17,28 +17,38 @@ public class ReactorSystem {
   public ReactorSystem(){}
   
   public ReactorSystem (TubularReactor[] reactors){
+	  if(reactors == null)
+		  throw new CouldNotConstructObjectException("Could not initiate ReactorSystem");
     this.reactors = new TubularReactor[numberReactors];  
     for (int i=0; i<numberReactors; i++){
-      this.reactors [i] = reactors [i]; 
+    	if(reactors[i]==null)
+    		throw new CouldNotConstructObjectException("Could not initiate ReactorSystem");
+      this.reactors [i] = reactors[i].clone(); 	//SINCE TUBULAR REACTOR IS ABSTRACT 
     }
   }
   
   public ReactorSystem (int configuration, int numberReactors, TubularReactor [] reactors){
-    this.configuration = configuration;
-    this.numberReactors = numberReactors;
+	  if(reactors == null || configuration <= 0 || numberReactors <=0)
+		  throw new CouldNotConstructObjectException("Could not initiate ReactorSystem");
     this.reactors = new TubularReactor[numberReactors];  
     for (int i=0; i<numberReactors; i++){
-      this.reactors [i] = reactors [i]; 
+    	if(reactors[i]==null)
+    		throw new CouldNotConstructObjectException("Could not initiate ReactorSystem");
+      this.reactors [i] = reactors[i].clone(); 	//SINCE TUBULAR REACTOR IS ABSTRACT 
     }
+    this.configuration = configuration;
+    this.numberReactors = numberReactors;
   }
   
   //Copy Constructor
   public ReactorSystem (ReactorSystem source){
+	  if(source == null)
+		  throw new CouldNotConstructObjectException("Could not initiate copy of ReactorSystem");
     this.configuration = source.configuration;
     this.numberReactors = source.numberReactors;
     this.reactors = new TubularReactor[source.numberReactors];  
     for (int i=0; i<source.numberReactors; i++){
-      this.reactors [i] = source.reactors [i]; 
+      this.reactors [i] = source.reactors [i].clone(); 
     }
   }
   
@@ -50,21 +60,38 @@ public class ReactorSystem {
     return this.numberReactors;
   }     
   public TubularReactor [] getReactors(){
-    return this.reactors;
+	  TubularReactor [] copy = new TubularReactor[this.reactors.length];
+	  for(int i =0; i<copy.length; i++) {
+		  copy[i] = this.reactors[i].clone(); //SINCE ABSTRACT
+	  }
+    return copy;
   }
   
+  
+  
   //Mutators
-  public void setConfiguration(int configuration){
+  public boolean setConfiguration(int configuration){
+	  if(configuration <= 0)
+		  return false;
     this.configuration = configuration;
+    return true;
   }
-  public void setNumberReactors (int numberReactors){
+  public boolean setNumberReactors (int numberReactors){
+	  if(numberReactors<= 0)
+		  return false;
     this.numberReactors = numberReactors;
+    return true;
   }
-  public void setReactors (TubularReactor [] reactors){
+  public boolean setReactors (TubularReactor [] reactors){
+	  if(reactors == null|| reactors.length != this.reactors.length)
+		  return false;
     this.reactors = new TubularReactor [reactors.length];
     for (int i=0; i<reactors.length;i++){
-      this.reactors[i]= reactors[i];
+    	if(reactors[i]==null)
+    		return false;
+      this.reactors[i]= reactors[i].clone();
     }
+    return true;
   }
   
   
@@ -76,53 +103,48 @@ public class ReactorSystem {
   return data;
   }
   
-  /* public boolean equals(Object source){
-   if (source == null)
-   return false;
-   else if (source.getClass() != this.getClass())
-   else {
-   Species object = (Species)source;
-   return (this.name == object.name);
-   private Species [] reactants;
-   private Species [] species;
-   private Reaction [] reactions;
-   private double conversion;
-   private double productionRate;
-   private double totalInitialConcentration; 
-   private int phase; // 1=liquid 2=gaz 3=solid 4=mixture 
-   } 
-   }*/
+  //Clone Method
+  public ReactorSystem clone() {
+	  return new ReactorSystem(this);
+  }
   
-  //Methods
-  /*  
+
+  //Equals
+  public boolean equals(Object source){
+	  if (source == null)
+	      return false;
+else if (source.getClass() != this.getClass())
+	      return false;
+else {
+	      ReactorSystem object = (ReactorSystem)source;
+	      if((object.reactors.length != this.reactors.length))
+	    	  return false;
+	      boolean other = true;
+	      for(int i =0; i<object.reactors.length;i++) {
+	    	  if(!(this.reactors[i].equals(object.reactors[i])))
+	    		  other = false;
+	      }
+	      
+	      if(object.configuration != this.configuration)
+	    	  other = false;
+	      if(object.numberReactors != this.numberReactors)
+	    	  other = false;
+	     return other;
+	    }
+   }
+  
+  //To String 
    public String toString (){
    String string="";
    
-   string = "Reaction System: \nThis reaction system contains "+this.species.length+" species";
-   for (int i=0; i<this.species.length;i++){
-   string += "\n"+this.species[i];
+   string = "Reactor System: \nThis reaction system contains "+this.reactors.length+" reactor(s)";
+   for (int i=0; i<this.reactors.length;i++){
+   string += "\n"+this.reactors[i];
    }    
    
-   string += "\nThis reaction system contains "+this.reactions.length+" reaction(s)";
-   
-   for (int i=0; i<this.reactions.length;i++){
-   string += "\nReaction # "+(i+1)+"\n"+this.reactions[i];
-   }  
-   if (this.conversion !=-1)
-   string += "\nThe conversion is: "+this.conversion;
-   if (this.productionRate !=-1)
-   string += "\nThe production rate is: "+this.productionRate;
-   if (this.totalInitialConcentration !=-1)
-   string += "\nThe total initial concentration is: "+this.totalInitialConcentration;
-   if(this.phase ==1)
-   string += "\nThe phase is liquid";
-   if (this.phase ==2)
-   string += "\nThe phase is gas";
-   if (this.phase ==3)
-   string += "\nThe phase is solid";  
-   if (this.phase ==4)
-   string += "\nThe phase is mixed";    
+   string += "\nThis reactor system also contains "+this.configuration+" configuration(s)" + " and number of reactors is "+this.numberReactors;
+      
    return string; 
    }
-   */
+   
 }// end of ReactorSystem class

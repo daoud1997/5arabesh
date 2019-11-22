@@ -27,7 +27,7 @@ public class PlugFlowReactor extends TubularReactor{
     return (this.getReactionSystem().sumRateLawsPerSpecie(this.getReactionSystem().getSpecies(),this.getReactionSystem().getSpecies()[g_index], g_concentrations));
     
   }        
-  
+  //SINCE AM ASSUMING THERE WILL BE NO ADDITIONAL INSTANCE VARIABLES OR METHODS WE WILL JUST CHECK THE SUPER EQUALS
   public boolean equals(Object source){
     if (source == null)
       return false;
@@ -35,9 +35,11 @@ public class PlugFlowReactor extends TubularReactor{
       return false;
     else {
       PlugFlowReactor object = (PlugFlowReactor)source;
-      return (this.getInitialTotalVolume() == object.getInitialTotalVolume());
+      if(!super.equals(object))
+    	  return false;
+      return true;
     }
-  }// end of solveODE method
+  }// end of equals Method
   
   public String toString (){
     return  "This is an isobaric and isothermal Plug Flow Reactor containing the following reaction system: \n"+super.toString();     

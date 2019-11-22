@@ -13,8 +13,8 @@ public abstract class TubularReactor implements ODEEquation{
   public static final double STEP_SIZE = 0.1;
   
   private ReactionSystem reactionSystem;
-  private double initialPressure;
-  private double initialTemperature;
+  private double initialPressure; //Assuming pressure cant be negative
+  private double initialTemperature; //ASSUMING THE TEMPERATURE IS IN KALVIN CUZ CANT BE NEGATIVE
   private double initialTotalVolume;
   private double initialVolumetricFlowRate;
   
@@ -26,13 +26,17 @@ public abstract class TubularReactor implements ODEEquation{
   public double [] g_finalFlowRates;
   
   public TubularReactor (ReactionSystem reactionSystem, double initialTotalVolume, double initialVolumetricFlowRate){
-    this.reactionSystem = reactionSystem;
+	  if(reactionSystem == null || initialTotalVolume<0 || initialVolumetricFlowRate <0)
+		  throw new CouldNotConstructObjectException("Could not constuct TubularReactor");
+    this.reactionSystem = new ReactionSystem(reactionSystem);
     this.initialTotalVolume = initialTotalVolume;
     this.initialVolumetricFlowRate = initialVolumetricFlowRate;
   }
   
   public TubularReactor (ReactionSystem reactionSystem, double initialPressure, double initialTemperature, double initialTotalVolume, double initialVolumetricFlowRate){
-    this.reactionSystem = reactionSystem;
+	  if(reactionSystem == null || initialTotalVolume<0 || initialVolumetricFlowRate <0 || initialPressure < 0 || initialTemperature <0)
+		  throw new CouldNotConstructObjectException("Could not constuct TubularReactor");
+    this.reactionSystem = new ReactionSystem(reactionSystem);
     this.initialPressure = initialPressure;
     this.initialTemperature = initialTemperature;
     this.initialTotalVolume = initialTotalVolume;
@@ -40,7 +44,9 @@ public abstract class TubularReactor implements ODEEquation{
   }    
   
   public TubularReactor (TubularReactor source){
-    this.reactionSystem = source.reactionSystem;
+	  if(source == null)
+		  throw new CouldNotConstructObjectException("Could not constuct copy of TubularReactor");
+    this.reactionSystem = new ReactionSystem(source.reactionSystem);
     this.initialPressure = source.initialPressure;
     this.initialTemperature = source.initialTemperature;
     this.initialTotalVolume = source.initialTotalVolume;
@@ -49,7 +55,7 @@ public abstract class TubularReactor implements ODEEquation{
   
   //Accessors  
   public ReactionSystem getReactionSystem(){
-    return this.reactionSystem;
+    return new ReactionSystem(this.reactionSystem);
   }
   public double getInitialPressure(){
     return this.initialPressure;
@@ -72,20 +78,35 @@ public abstract class TubularReactor implements ODEEquation{
   }
   
   //Mutators
-  public void setReactionSystem(ReactionSystem reactionSystem){
-    this.reactionSystem= reactionSystem;
+  public boolean setReactionSystem(ReactionSystem reactionSystem){
+	  if(reactionSystem == null)
+		  return false;
+    this.reactionSystem= new ReactionSystem(reactionSystem);
+    return true;
   }
-  public void setInitialPressure(double initialPressure){
+  public boolean setInitialPressure(double initialPressure){
+	  if(initialPressure < 0)
+		  return false;
     this.initialPressure=initialPressure;
+    return true;
   }
-  public void setInitialTemperature(double initialTemperature){
+  public boolean setInitialTemperature(double initialTemperature){
+	  if(initialTemperature < 0)
+		  return false;
     this.initialTemperature= initialTemperature;
+    return true;
   }
-  public void setInitialTotalVolume(double initialTotalVolume){
+  public boolean setInitialTotalVolume(double initialTotalVolume){
+	  if(initialTotalVolume <0)
+		  return false;
     this.initialTotalVolume =initialTotalVolume;
+    return true;
   }
-  public void setInitialVolumetricFlowRate(double initialVolumetricFlowRate){
+  public boolean setInitialVolumetricFlowRate(double initialVolumetricFlowRate){
+	  if(initialVolumetricFlowRate <0)
+		  return false;
     this.initialVolumetricFlowRate = initialVolumetricFlowRate;
+    return true;
   }
   
   public void setODESolverMethod(int odeSolverMethod){
@@ -228,6 +249,31 @@ public abstract class TubularReactor implements ODEEquation{
     }// end of solveSystem method
 
   public abstract double equation (double x, double y);
+  
+  //Equals Method
+  public boolean equals(Object source){
+		if (source == null)
+			      return false;
+		else if (source.getClass() != this.getClass())
+			      return false;
+		else {
+			TubularReactor object = (TubularReactor)source;
+			boolean other = true;
+			if( new ReactionSystem(object.reactionSystem) != new ReactionSystem(this.reactionSystem))
+		    	  other = false;
+			if(object.initialPressure != this.initialPressure)
+				other = false;
+			if(object.initialTemperature != this.initialTemperature)
+				other = false;
+			if(object.initialTotalVolume != this.initialTotalVolume)
+				other = false;
+			if(object.initialVolumetricFlowRate != this.initialVolumetricFlowRate)
+				other = false;
+			return other;
+		}
+  }		
+
+  
   
   public String toString (){
     String string ="";
