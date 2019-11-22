@@ -1,0 +1,93 @@
+
+-------------------------Species Information-----------------------
+Number of species
+-----------------------------Species 1-----------------------------
+Name
+A
+Initial Flow Rate
+15.0
+Initial Concentration
+-1.0
+Rate Constant
+100.0
+Max Rate of Change of the Flow Rate
+0.1
+Transport Coefficient
+-1.0
+Shell-side Concentration
+-1.0
+-----------------------------Species 3-----------------------------
+Name
+B
+Initial Flow Rate
+15.0
+Initial Concentration
+-1.0
+Rate Constant
+-1.0
+Max Rate of Change of the Flow Rate
+0.1
+Transport Coefficient
+-1.0
+Shell-side Concentration
+-1.0
+-----------------------------Species 3-----------------------------
+Name
+C
+Initial Flow Rate
+0.0
+Initial Concentration
+-1.0
+Rate Constant
+-1.0
+Max Rate of Change of the Flow Rate
+0.1
+Transport Coefficient
+-1.0
+Shell-side Concentration
+-1.0
+-----------------------Reaction Information------------------------
+Number of reactions
+----------------------------Reaction 1-----------------------------
+Per reaction...
+
+Number of reactants
+2
+Number of products
+1
+Reactants
+A, B
+Products
+C
+coefficient 
+1, 2, 1
+Is the reaction elementary
+yes
+Is the reaction reversible
+no
+If the reaction is reversible, what is the equilibrium constant
+
+-----------------------Reactor Information-------------------------
+Number of reactors
+1
+Integration method (Euler or RK45 with adaptive step size)*
+RK45
+Error Tolerance
+0.0001
+Step Size
+0.1
+----------------------------Reactor 1------------------------------
+Initial Pressure
+-1.0
+Initial Temperature
+-1.0
+Initial Total Volume
+600.0
+Initial Volumetric Flow Rate
+120.0
+
+** add units and specify valid entries..
+** if value not available, leave the line blank
+** provide sample txt docs.
+** create readme with instructions
+** use clone for all user defined types in constructors
